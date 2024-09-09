@@ -20,38 +20,48 @@ dialogHora.textContent = getCurrentTime();
 
 const btnDialogEntrada = document.getElementById("btn-dialog-entrada");
 btnDialogEntrada.addEventListener("click", () => {
-    
-    let currentDate = getCurrentDate();
-    let currentTime = getCurrentTime();
-    let userLocation = getUserLocation();
-
-    ponto = {
-        "date": currentDate,
-        "time": currentTime,
-        "location": userLocation,
-        "id": 1,
-        "type": "entrada"
-    }
-
-    console.log(ponto);
+    saveRegisterLocalStorage(JSON.stringify(getObjectRegister("entrada")));
 });
 
 
 const btnDialogSaida = document.getElementById("btn-dialog-saida");
 btnDialogSaida.addEventListener("click", () => {
-
-    // crie um objeto e salve a data, hora, location, id e type
-    // o id é 1 (fixo)
-    // o type será "saida"
-    // o location pode ser recuperado com a funcao getUserLocation (será undefined por enquanto)
-
+    saveRegisterLocalStorage(JSON.stringify(getObjectRegister("saida")));
 });
+
+
+function getObjectRegister(registerType) {
+    
+    ponto = {
+        "date": getCurrentDate(),
+        "time": getCurrentTime(),
+        "location": getUserLocation(),
+        "id": 1,
+        "type": registerType
+    }
+    return ponto;
+}
 
 const btnDialogFechar = document.getElementById("dialog-fechar");
 btnDialogFechar.addEventListener("click", () => {
     dialogPonto.close();
 })
 
+// salvar e recuperar um array de objetos ao invés de 1 objeto
+
+function saveRegisterLocalStorage(register) {
+    localStorage.setItem("register", register);
+}
+
+function getRegisterLocalStorage(key) {
+    // retornar o valor correspondente à chave (key)
+    // getItem(chave)
+}
+
+// O que é uma função assíncrona?
+// O que é um objeto Javascript?
+// O que é uma instância?
+// O que é PROTOTYPE?
 function getUserLocation() {
     navigator.geolocation.getCurrentPosition((position) => {   
         let userLocation = {
@@ -61,6 +71,31 @@ function getUserLocation() {
         return userLocation;
     });
 }
+
+
+
+// Como garantir que uma função assíncrona já foi executada/processada?
+// Possíveis soluções
+
+//getUserLocation(functionCallback) {
+    //navigator.geolocation.getCurrentPosition((position) => {
+        //userLocation = {
+            //OBJETO com lat e long
+        //}
+        //functionCallback(userLocation)
+    //})
+//}
+
+// OU
+
+//getUserLocation() {
+    //return new Promise((suc, fail) => {
+        //navigator.geolocation.getCurrentPosition()
+    //})
+
+    
+//}
+ 
 
 
 function register() {
