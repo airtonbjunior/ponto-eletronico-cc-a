@@ -21,6 +21,7 @@ const dialogHora = document.getElementById("dialog-hora");
 dialogHora.textContent = getCurrentTime();
 
 
+/*
 const btnDialogEntrada = document.getElementById("btn-dialog-entrada");
 btnDialogEntrada.addEventListener("click", () => {
     saveRegisterLocalStorage(getObjectRegister("entrada"));
@@ -31,10 +32,30 @@ const btnDialogSaida = document.getElementById("btn-dialog-saida");
 btnDialogSaida.addEventListener("click", () => {
     saveRegisterLocalStorage(getObjectRegister("saida"));
 });
+*/
 
 
-function getObjectRegister(registerType) {
+// Apresentar para o usuário final o valor correspondente ao provável tipo de 
+// próximo ponto
+// Ex.: se o último ponto do usuário for do tipo "Entrada", selecionar por padrão
+// a option "Intervalo"
+const selectRegisterType = document.getElementById("register-type");
+
+const btnDialogRegister = document.getElementById("btn-dialog-register");
+btnDialogRegister.addEventListener("click", () => {
+
+    let register = getObjectRegister(selectRegisterType.value);
+    saveRegisterLocalStorage(register);
     
+    localStorage.setItem("lastRegisterType", selectRegisterType.value);
+});
+
+
+
+// cria um objeto correspondente a um registro de ponto
+// com data/hora/localizacao atualizados
+// o parâmetro é o tipo de ponto
+function getObjectRegister(registerType) {    
     ponto = {
         "date": getCurrentDate(),
         "time": getCurrentTime(),
@@ -51,12 +72,9 @@ btnDialogFechar.addEventListener("click", () => {
 })
 
 
-
 let registersLocalStorage = getRegisterLocalStorage("register");
 
 
-// TO-DO: os índices do array estão sendo salvos como string ao invés de objetos
-// RESOLVER ISSO (parse e Stringfy)
 function saveRegisterLocalStorage(register) {
 
     registersLocalStorage.push(register);
