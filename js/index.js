@@ -1,3 +1,6 @@
+// TO-DO:
+// organizar código
+
 const diaSemana = document.getElementById("dia-semana");
 const dataAtual = document.getElementById("data-atual");
 const horaAtual = document.getElementById("hora-atual");
@@ -20,13 +23,13 @@ dialogHora.textContent = getCurrentTime();
 
 const btnDialogEntrada = document.getElementById("btn-dialog-entrada");
 btnDialogEntrada.addEventListener("click", () => {
-    saveRegisterLocalStorage(JSON.stringify(getObjectRegister("entrada")));
+    saveRegisterLocalStorage(getObjectRegister("entrada"));
 });
 
 
 const btnDialogSaida = document.getElementById("btn-dialog-saida");
 btnDialogSaida.addEventListener("click", () => {
-    saveRegisterLocalStorage(JSON.stringify(getObjectRegister("saida")));
+    saveRegisterLocalStorage(getObjectRegister("saida"));
 });
 
 
@@ -47,15 +50,29 @@ btnDialogFechar.addEventListener("click", () => {
     dialogPonto.close();
 })
 
-// salvar e recuperar um array de objetos ao invés de 1 objeto
 
+
+let registersLocalStorage = getRegisterLocalStorage("register");
+
+
+// TO-DO: os índices do array estão sendo salvos como string ao invés de objetos
+// RESOLVER ISSO (parse e Stringfy)
 function saveRegisterLocalStorage(register) {
-    localStorage.setItem("register", register);
+
+    registersLocalStorage.push(register);
+
+    localStorage.setItem("register", JSON.stringify(registersLocalStorage));
 }
 
 function getRegisterLocalStorage(key) {
-    // retornar o valor correspondente à chave (key)
-    // getItem(chave)
+
+    let registers = localStorage.getItem(key);
+
+    if(!registers) {
+        return [];
+    }
+
+    return JSON.parse(registers);
 }
 
 // O que é uma função assíncrona?
