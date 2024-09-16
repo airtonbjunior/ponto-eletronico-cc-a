@@ -1,6 +1,5 @@
 // TO-DO:
 // organizar código
-
 const diaSemana = document.getElementById("dia-semana");
 const dataAtual = document.getElementById("data-atual");
 const horaAtual = document.getElementById("hora-atual");
@@ -11,7 +10,6 @@ btnRegistrarPonto.addEventListener("click", register);
 diaSemana.textContent = getWeekDay();
 dataAtual.textContent = getCurrentDate();
 
-
 const dialogPonto = document.getElementById("dialog-ponto");
 
 const dialogData = document.getElementById("dialog-data");
@@ -20,29 +18,27 @@ dialogData.textContent = getCurrentDate();
 const dialogHora = document.getElementById("dialog-hora");
 dialogHora.textContent = getCurrentTime();
 
-
-/*
-const btnDialogEntrada = document.getElementById("btn-dialog-entrada");
-btnDialogEntrada.addEventListener("click", () => {
-    saveRegisterLocalStorage(getObjectRegister("entrada"));
-});
-
-
-const btnDialogSaida = document.getElementById("btn-dialog-saida");
-btnDialogSaida.addEventListener("click", () => {
-    saveRegisterLocalStorage(getObjectRegister("saida"));
-});
-*/
-
-
 const selectRegisterType = document.getElementById("register-type");
 
-// Selecionar o provável tipo do próximo registro
-// Ex.: se o último ponto do usuário for do tipo "Entrada", selecionar por padrão
-// a option "Intervalo"
+
+// TO-DO:
+// finalizar a função
 function setRegisterType() {
-    // 1 - recupera o valor do último tipo de registro do localstorage (chave lastRegisterType)
-    // 2 - selecionar o value do select (elemento selectRegisterType) de acordo com a regra
+    let lastType = localStorage.getItem("lastRegisterType");
+    if(lastType == "entrada") {
+        selectRegisterType.value = "intervalo";
+        return;
+    }
+    if(lastType == "intervalo") {
+
+    }
+    if(lastType == "volta-intervalo") {
+        
+    }
+    if(lastType == "saida") {
+    
+    }
+    // Continuar de acordo com as regras abaixo
     // REGRA
     // ÚLTIMO PONTO DO USUÁRIO  |  VALOR DA OPTION DO SELECT
     // Entrada                  |  Intervalo
@@ -55,11 +51,20 @@ function setRegisterType() {
 
 const btnDialogRegister = document.getElementById("btn-dialog-register");
 btnDialogRegister.addEventListener("click", () => {
+    // PENSAR: o que fazer quando um usuário registrar o mesmo tipo de ponto
+    // dentro de x minutos?
 
     let register = getObjectRegister(selectRegisterType.value);
     saveRegisterLocalStorage(register);
     
     localStorage.setItem("lastRegisterType", selectRegisterType.value);
+
+    // TO-DO:
+    // Informar o usuário do status do registro do ponto
+    // Sucesso ou falha
+    // Pode ser apresentado na tela principal no cabeçalho
+    // Efeito de transição e aparecer por 3 a 5s depois sumir
+    dialogPonto.close();
 });
 
 
