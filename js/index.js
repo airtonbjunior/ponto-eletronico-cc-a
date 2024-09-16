@@ -35,11 +35,23 @@ btnDialogSaida.addEventListener("click", () => {
 */
 
 
-// Apresentar para o usuário final o valor correspondente ao provável tipo de 
-// próximo ponto
+const selectRegisterType = document.getElementById("register-type");
+
+// Selecionar o provável tipo do próximo registro
 // Ex.: se o último ponto do usuário for do tipo "Entrada", selecionar por padrão
 // a option "Intervalo"
-const selectRegisterType = document.getElementById("register-type");
+function setRegisterType() {
+    // 1 - recupera o valor do último tipo de registro do localstorage (chave lastRegisterType)
+    // 2 - selecionar o value do select (elemento selectRegisterType) de acordo com a regra
+    // REGRA
+    // ÚLTIMO PONTO DO USUÁRIO  |  VALOR DA OPTION DO SELECT
+    // Entrada                  |  Intervalo
+    // Intervalo                |  Volta Intervalo
+    // Volta Intervalo          |  Saída
+    // Saída                    |  Entrada
+}
+
+
 
 const btnDialogRegister = document.getElementById("btn-dialog-register");
 btnDialogRegister.addEventListener("click", () => {
