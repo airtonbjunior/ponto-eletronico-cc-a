@@ -57,7 +57,7 @@ btnDialogRegister.addEventListener("click", () => {
     let register = getObjectRegister(selectRegisterType.value);
     saveRegisterLocalStorage(register);
     
-    localStorage.setItem("lastRegisterType", selectRegisterType.value);
+    localStorage.setItem("lastRegister", JSON.stringify(register));
 
     const alertaSucesso = document.getElementById("alerta-ponto-registrado");
     alertaSucesso.classList.remove("hidden");
@@ -68,11 +68,6 @@ btnDialogRegister.addEventListener("click", () => {
         alertaSucesso.classList.add("hidden");
     }, 5000);
 
-    // TO-DO:
-    // Informar o usuário do status do registro do ponto
-    // Sucesso ou falha
-    // Pode ser apresentado na tela principal no cabeçalho
-    // Efeito de transição e aparecer por 3 a 5s depois sumir
     dialogPonto.close();
 });
 
@@ -102,9 +97,7 @@ let registersLocalStorage = getRegisterLocalStorage("register");
 
 
 function saveRegisterLocalStorage(register) {
-
     registersLocalStorage.push(register);
-
     localStorage.setItem("register", JSON.stringify(registersLocalStorage));
 }
 
@@ -161,8 +154,19 @@ function getUserLocation() {
 
 function register() {
 
-    // escrever no dialog o último ponto do usuário
-    // DATA | HORA | TIPO
+    const dialogUltimoRegistro = document.getElementById("dialog-ultimo-registro");
+    let lastRegister = JSON.parse(localStorage.getItem("lastRegister"));
+
+    if(lastRegister) {
+        let lastDateRegister = lastRegister.date;
+        let lastTimeRegister = lastRegister.time;
+        let lastRegisterType = lastRegister.type;
+
+        dialogUltimoRegistro.textContent = "Último Registro: " + lastDateRegister + " | " + lastTimeRegister + " | " + lastRegisterType;
+    }
+
+    // atualizar o elemento dialogHora com o valor da hora atual
+    // getCurrentTime a cada segundo usando o setInterval
 
     dialogPonto.showModal();
 }
