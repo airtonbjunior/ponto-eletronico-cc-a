@@ -59,6 +59,15 @@ btnDialogRegister.addEventListener("click", () => {
     
     localStorage.setItem("lastRegisterType", selectRegisterType.value);
 
+    const alertaSucesso = document.getElementById("alerta-ponto-registrado");
+    alertaSucesso.classList.remove("hidden");
+    alertaSucesso.classList.add("show");
+
+    setTimeout(() => {
+        alertaSucesso.classList.remove("show");
+        alertaSucesso.classList.add("hidden");
+    }, 5000);
+
     // TO-DO:
     // Informar o usuário do status do registro do ponto
     // Sucesso ou falha
@@ -151,6 +160,10 @@ function getUserLocation() {
 
 
 function register() {
+
+    // escrever no dialog o último ponto do usuário
+    // DATA | HORA | TIPO
+
     dialogPonto.showModal();
 }
 
