@@ -13,10 +13,10 @@ dataAtual.textContent = getCurrentDate();
 const dialogPonto = document.getElementById("dialog-ponto");
 
 const dialogData = document.getElementById("dialog-data");
-dialogData.textContent = getCurrentDate();
+dialogData.textContent = "Data: " + getCurrentDate();
 
 const dialogHora = document.getElementById("dialog-hora");
-dialogHora.textContent = getCurrentTime();
+//dialogHora.textContent = getCurrentTime();
 
 const selectRegisterType = document.getElementById("register-type");
 
@@ -50,11 +50,11 @@ function setRegisterType() {
 
 
 const btnDialogRegister = document.getElementById("btn-dialog-register");
-btnDialogRegister.addEventListener("click", () => {
+btnDialogRegister.addEventListener("click", async () => {
     // PENSAR: o que fazer quando um usuário registrar o mesmo tipo de ponto
     // dentro de x minutos?
 
-    let register = getObjectRegister(selectRegisterType.value);
+    let register = await getObjectRegister(selectRegisterType.value);
     saveRegisterLocalStorage(register);
     
     localStorage.setItem("lastRegister", JSON.stringify(register));
@@ -76,11 +76,16 @@ btnDialogRegister.addEventListener("click", () => {
 // cria um objeto correspondente a um registro de ponto
 // com data/hora/localizacao atualizados
 // o parâmetro é o tipo de ponto
-function getObjectRegister(registerType) {    
+async function getObjectRegister(registerType) {    
+
+    const location = await getUserLocation();
+
+    console.log(location);
+
     ponto = {
         "date": getCurrentDate(),
         "time": getCurrentTime(),
-        "location": getUserLocation(),
+        "location": location,
         "id": 1,
         "type": registerType
     }
@@ -116,6 +121,7 @@ function getRegisterLocalStorage(key) {
 // O que é um objeto Javascript?
 // O que é uma instância?
 // O que é PROTOTYPE?
+/*
 function getUserLocation() {
     navigator.geolocation.getCurrentPosition((position) => {   
         let userLocation = {
@@ -125,7 +131,7 @@ function getUserLocation() {
         return userLocation;
     });
 }
-
+*/
 
 
 // Como garantir que uma função assíncrona já foi executada/processada?
@@ -150,6 +156,20 @@ function getUserLocation() {
     
 //}
  
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            let userLocation = {
+                "latitude": position.coords.latitude,
+                "longitude": position.coords.longitude
+            }
+            resolve(userLocation);
+        }, 
+        (error) => {
+            reject("Erro " + error);
+        });
+    });
+}
 
 
 function register() {
@@ -165,8 +185,17 @@ function register() {
         dialogUltimoRegistro.textContent = "Último Registro: " + lastDateRegister + " | " + lastTimeRegister + " | " + lastRegisterType;
     }
 
-    // atualizar o elemento dialogHora com o valor da hora atual
-    // getCurrentTime a cada segundo usando o setInterval
+    dialogHora.textContent = "Hora: " + getCurrentTime();
+
+    let interval = setInterval(() => {
+        dialogHora.textContent = "Hora: " + getCurrentTime();
+    }, 1000);
+
+    console.log(interval);
+
+    // TO-DO:
+    // Podemos manter esses setInterval sem finalizar?
+    // Como podemos usar o clearInterval()?
 
     dialogPonto.showModal();
 }
@@ -176,13 +205,13 @@ function updateContentHour() {
     horaAtual.textContent = getCurrentTime();
 }
 
-// Retorna a hora atual (hora/minuto/segundo)
+
 function getCurrentTime() {
     const date = new Date();
     return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0') + ":" + String(date.getSeconds()).padStart(2, '0');
 }
 
-// Retorna a data atual no padrão dd/mm/aaaa
+
 function getCurrentDate() {
     const date = new Date(); 
     let mes = date.getMonth() + 1;
