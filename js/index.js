@@ -49,6 +49,26 @@ function setRegisterType() {
 
 
 
+function converteTipo(tipoOriginal) {
+    if(tipoOriginal == "entrada") {
+        return "E"
+    }
+
+    if(tipoOriginal == "saida") {
+        return "S"
+    }
+
+    if(tipoOriginal == "intervalo") {
+        return "I"
+    }
+
+    if(tipoOriginal == "volta-intervalo") {
+        return "V"
+    }
+}
+
+
+
 const btnDialogRegister = document.getElementById("btn-dialog-register");
 btnDialogRegister.addEventListener("click", async () => {
     // PENSAR: o que fazer quando um usuário registrar o mesmo tipo de ponto
@@ -56,8 +76,33 @@ btnDialogRegister.addEventListener("click", async () => {
 
     let register = await getObjectRegister(selectRegisterType.value);
     saveRegisterLocalStorage(register);
-    
-    localStorage.setItem("lastRegister", JSON.stringify(register));
+
+    // TO-DO: por que não estou conseguindo passar o objeto?
+
+    const location = await getUserLocation();
+
+    console.log(location)
+
+    fetch('http://localhost:3000/ponto', {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+            "dataHora": getCurrentDate() + " " + getCurrentTime(),
+            "id_usuario": 1,
+            "tipo": converteTipo(selectRegisterType.value),
+            "localizacao": JSON.stringify(location)
+        })
+    })
+    .then( () => {
+            console.log(register);
+            console.log("Requisição feita com sucesso");
+        }
+    )
+    .catch(error => console.log(error));
+
+
+
+    //localStorage.setItem("lastRegister", JSON.stringify(register));
 
     const alertaSucesso = document.getElementById("alerta-ponto-registrado");
     alertaSucesso.classList.remove("hidden");
@@ -83,11 +128,10 @@ async function getObjectRegister(registerType) {
     console.log(location);
 
     ponto = {
-        "date": getCurrentDate(),
-        "time": getCurrentTime(),
-        "location": location,
-        "id": 1,
-        "type": registerType
+        "dataHora": getCurrentDate() + getCurrentTime(),
+        "id_usuario": 1,
+        "tipo": 'E'
+        //"tipo": registerType
     }
     return ponto;
 }
